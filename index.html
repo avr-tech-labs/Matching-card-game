@@ -54,7 +54,13 @@
                     </div>
                     <span class="level-count" id="level-count">1 / 500</span>
                 </div>
-                <div class="level-list" id="level-list" aria-label="Choose from 500 levels"></div>
+                <button class="level-picker-toggle" id="level-picker-toggle" type="button" aria-expanded="false" aria-controls="level-picker-panel">
+                    <span id="level-picker-label">Choose a level</span>
+                    <span class="level-picker-chevron" aria-hidden="true">⌄</span>
+                </button>
+                <div class="level-picker-panel" id="level-picker-panel" hidden>
+                    <div class="level-list" id="level-list" aria-label="Choose from 500 levels"></div>
+                </div>
             </section>
 
             <div class="game-toolbar">
