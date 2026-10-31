@@ -23,6 +23,9 @@ const freeplayTab = document.getElementById('freeplay-tab');
 const journeyPanel = document.getElementById('journey-panel');
 const freeplayPanel = document.getElementById('freeplay-panel');
 const levelList = document.getElementById('level-list');
+const levelPickerPanel = document.getElementById('level-picker-panel');
+const levelPickerToggle = document.getElementById('level-picker-toggle');
+const levelPickerLabel = document.getElementById('level-picker-label');
 const levelCount = document.getElementById('level-count');
 const levelDescription = document.getElementById('level-description');
 const progressLabel = document.getElementById('progress-label');
@@ -97,6 +100,7 @@ function renderLevels() {
     levelCount.textContent = `${selectedLevel} / ${MAX_LEVELS}`;
     const level = levels[selectedLevel - 1];
     levelDescription.textContent = `Level ${selectedLevel} · ${level.pairs} pairs${level.timeLimit ? ` · ${formatTime(level.timeLimit)} time limit` : ''} · ${unlockedLevel} unlocked`;
+    levelPickerLabel.textContent = `Choose a level · ${selectedLevel} selected`;
     levelList.innerHTML = '';
 
     levels.forEach((level, index) => {
@@ -125,6 +129,7 @@ function renderLevels() {
             tile.addEventListener('click', () => {
                 selectedLevel = levelNumber;
                 startGame();
+                setLevelPickerOpen(false);
             });
         }
         levelList.appendChild(tile);
@@ -132,6 +137,13 @@ function renderLevels() {
 
     const selectedTile = levelList.querySelector('.level-tile.selected');
     if (selectedTile) selectedTile.scrollIntoView({ block: 'nearest' });
+}
+
+function setLevelPickerOpen(isOpen) {
+    levelPickerPanel.hidden = !isOpen;
+    levelPickerToggle.setAttribute('aria-expanded', String(isOpen));
+    levelPickerToggle.classList.toggle('is-open', isOpen);
+    if (isOpen) renderLevels();
 }
 
 function shuffle(items) {
@@ -249,7 +261,12 @@ function startGame() {
     messageContainer.textContent = 'Pick any card to get started.';
     progressLabel.textContent = gameMode === 'journey' ? 'Level progress' : 'Pairs found';
     timerContainer.closest('.stat-card').querySelector('.stat-label').textContent = levelTimeLimit ? 'Time left' : 'Time';
-    if (gameMode === 'journey') renderLevels();
+    if (gameMode === 'journey') {
+        levelCount.textContent = `${selectedLevel} / ${MAX_LEVELS}`;
+        const level = levels[selectedLevel - 1];
+        levelDescription.textContent = `Level ${selectedLevel} · ${level.pairs} pairs${level.timeLimit ? ` · ${formatTime(level.timeLimit)} time limit` : ''} · ${getUnlockedLevel()} unlocked`;
+        levelPickerLabel.textContent = `Choose a level · ${selectedLevel} selected`;
+    }
     updateBestScore();
     updateProgress();
     updateHintButton();
@@ -394,7 +411,10 @@ function finishGame(won = true) {
     nextLevelButton.innerHTML = 'Next level <span aria-hidden="true">→</span>';
     if (gameMode === 'journey') {
         localStorage.setItem('memory-match-unlocked-level', Math.max(getUnlockedLevel(), Math.min(levels.length, selectedLevel + 1)));
-        renderLevels();
+        levelCount.textContent = `${selectedLevel} / ${MAX_LEVELS}`;
+        levelDescription.textContent = `Level ${selectedLevel} · ${levels[selectedLevel - 1].pairs} pairs${levels[selectedLevel - 1].timeLimit ? ` · ${formatTime(levels[selectedLevel - 1].timeLimit)} time limit` : ''} · ${getUnlockedLevel()} unlocked`;
+        levelPickerLabel.textContent = `Choose a level · ${selectedLevel} selected`;
+        if (!levelPickerPanel.hidden) renderLevels();
         winStars.textContent = `${'★'.repeat(stars)}${'☆'.repeat(3 - stars)}`;
         winStars.setAttribute('aria-label', `${stars} out of 3 stars`);
         nextLevelButton.hidden = !hasNextLevel;
@@ -428,10 +448,13 @@ soundButton.addEventListener('click', () => {
 hintButton.addEventListener('click', showHint);
 restartButton.addEventListener('click', startGame);
 playAgainButton.addEventListener('click', startGame);
+levelPickerToggle.addEventListener('click', () => {
+    setLevelPickerOpen(levelPickerPanel.hidden);
+});
 nextLevelButton.addEventListener('click', () => {
     if (selectedLevel < levels.length && selectedLevel < getUnlockedLevel()) {
         selectedLevel++;
-        renderLevels();
+        setLevelPickerOpen(false);
         startGame();
     }
 });
@@ -450,6 +473,7 @@ journeyTab.addEventListener('click', () => {
     startGame();
 });
 freeplayTab.addEventListener('click', () => {
+    setLevelPickerOpen(false);
     gameMode = 'freeplay';
     freeplayTab.classList.add('active');
     journeyTab.classList.remove('active');
@@ -468,5 +492,4 @@ winModal.addEventListener('keydown', event => {
     }
 });
 
-renderLevels();
 startGame();
