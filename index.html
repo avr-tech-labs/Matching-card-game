@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="theme-color" content="#0b1020">
+    <meta name="description" content="Play 500 progressive levels in this polished emoji memory matching game.">
+    <title>AVR Tech Labs | Memory Match</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <main class="game-shell">
+        <header class="page-header">
+            <a class="brand" href="#" aria-label="AVR Tech Labs">
+                <span class="brand-mark" aria-hidden="true"><span>AVR</span><i></i></span>
+                <span class="brand-copy">
+                    <span class="brand-name">AVR <span>Tech Labs</span></span>
+                    <span class="brand-tagline">IDEAS INTO REALITY</span>
+                </span>
+            </a>
+            <button class="sound-button" id="sound-btn" type="button" aria-pressed="true" aria-label="Turn sound off">
+                <span id="sound-icon" aria-hidden="true">♫</span>
+                <span id="sound-label">Sound on</span>
+            </button>
+        </header>
+
+        <section class="game-card" aria-labelledby="game-title">
+            <div class="game-heading">
+                <div>
+                    <p class="eyebrow"><span class="eyebrow-dot"></span> A LITTLE BRAIN BREAK</p>
+                    <h1 id="game-title">Memory <span>Match</span></h1>
+                    <p class="subtitle">Take on 500 levels, discover new emoji decks, or relax in free play.</p>
+                </div>
+                <div class="heading-sparkle" aria-hidden="true">✳</div>
+            </div>
+
+            <div class="game-modes" role="tablist" aria-label="Game mode">
+                <button class="mode-tab active" id="journey-tab" type="button" role="tab" aria-selected="true" aria-controls="journey-panel">
+                    <span aria-hidden="true">✦</span> Level journey
+                </button>
+                <button class="mode-tab" id="freeplay-tab" type="button" role="tab" aria-selected="false" aria-controls="freeplay-panel">
+                    <span aria-hidden="true">∞</span> Free play
+                </button>
+            </div>
+
+            <section class="journey-panel" id="journey-panel" role="tabpanel" aria-labelledby="journey-tab">
+                <div class="levels-heading">
+                    <div>
+                        <span class="control-label">YOUR ADVENTURE</span>
+                        <p id="level-description">Start small, then take on a bigger challenge.</p>
+                    </div>
+                    <span class="level-count" id="level-count">1 / 500</span>
+                </div>
+                <div class="level-list" id="level-list" aria-label="Choose from 500 levels"></div>
+            </section>
+
+            <div class="game-toolbar">
+                <div id="freeplay-panel" role="tabpanel" aria-labelledby="freeplay-tab" hidden>
+                    <label class="difficulty-control" for="difficulty">
+                        <span class="control-label">Difficulty</span>
+                        <select id="difficulty" aria-label="Choose difficulty">
+                            <option value="easy">Easy · 8 pairs</option>
+                            <option value="medium">Medium · 12 pairs</option>
+                            <option value="hard">Hard · 18 pairs</option>
+                        </select>
+                    </label>
+                </div>
+                <div class="toolbar-actions">
+                    <button class="hint-button" id="hint-btn" type="button">
+                        <span aria-hidden="true">✧</span> Hint <span class="hint-count" id="hint-count">3</span>
+                    </button>
+                    <button class="restart-button" id="restart-btn" type="button">
+                        <span aria-hidden="true">↻</span> New game
+                    </button>
+                </div>
+            </div>
+
+            <div class="stats-grid" aria-label="Game statistics">
+                <div class="stat-card">
+                    <span class="stat-icon moves-icon" aria-hidden="true">↗</span>
+                    <div><span class="stat-label">Moves</span><strong id="moves">0</strong></div>
+                </div>
+                <div class="stat-card">
+                    <span class="stat-icon time-icon" aria-hidden="true">◷</span>
+                    <div><span class="stat-label">Time</span><strong id="timer">00:00</strong></div>
+                </div>
+                <div class="stat-card">
+                    <span class="stat-icon best-icon" aria-hidden="true">♛</span>
+                    <div><span class="stat-label">Best</span><strong id="best-score">—</strong></div>
+                </div>
+            </div>
+
+            <div class="progress-section">
+                <div class="progress-copy">
+                    <span id="progress-label">Pairs found</span>
+                    <span id="progress-text">0 / 8</span>
+                </div>
+                <div class="progress-track" id="progress-track" role="progressbar" aria-label="Pairs found" aria-valuemin="0" aria-valuemax="8" aria-valuenow="0">
+                    <div class="progress-fill" id="progress-fill"></div>
+                </div>
+            </div>
+
+            <div class="grid-container" id="grid-container" aria-label="Memory cards"></div>
+            <p class="game-message" id="game-message" aria-live="polite">Pick any card to get started.</p>
+        </section>
+
+        <footer class="page-footer">
+            <span>Take your time. Trust your memory.</span>
+            <span class="footer-heart" aria-hidden="true">♥</span>
+        </footer>
+    </main>
+
+    <div class="modal-backdrop" id="win-modal" hidden>
+        <section class="win-dialog" role="dialog" aria-modal="true" aria-labelledby="win-title" aria-describedby="win-summary">
+            <div class="win-confetti" aria-hidden="true">✦</div>
+            <div class="win-trophy" aria-hidden="true">🏆</div>
+            <p class="eyebrow">THAT WAS BRILLIANT</p>
+            <h2 id="win-title">You did it!</h2>
+            <p class="win-stars" id="win-stars" aria-label="Level rating"></p>
+            <p class="win-summary" id="win-summary"></p>
+            <div class="win-actions">
+                <button class="replay-button" id="play-again-btn" type="button">Replay level</button>
+                <button class="play-again-button" id="next-level-btn" type="button">Next level <span aria-hidden="true">→</span></button>
+            </div>
+        </section>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
