@@ -323,9 +323,60 @@ h1 span {
     font-variant-numeric: tabular-nums;
 }
 
+.level-picker-toggle {
+    display: flex;
+    width: 100%;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    min-height: 42px;
+    margin-bottom: 10px;
+    padding: 0 13px;
+    border: 1px solid rgba(183, 160, 255, 0.24);
+    border-radius: 11px;
+    background: linear-gradient(110deg, rgba(183, 160, 255, 0.1), rgba(114, 230, 205, 0.045));
+    color: #e7e1ff;
+    cursor: pointer;
+    font-size: 11px;
+    font-weight: 600;
+    text-align: left;
+    transition: border-color 160ms ease, background 160ms ease;
+}
+
+.level-picker-toggle:hover,
+.level-picker-toggle:focus-visible,
+.level-picker-toggle.is-open {
+    border-color: rgba(183, 160, 255, 0.55);
+    background: linear-gradient(110deg, rgba(183, 160, 255, 0.16), rgba(114, 230, 205, 0.08));
+}
+
+.level-picker-toggle:focus-visible {
+    outline: 2px solid var(--accent);
+    outline-offset: 2px;
+}
+
+.level-picker-chevron {
+    color: var(--mint);
+    font-size: 17px;
+    transition: transform 160ms ease;
+}
+
+.level-picker-toggle.is-open .level-picker-chevron {
+    transform: rotate(180deg);
+}
+
+.level-picker-panel {
+    margin-bottom: 10px;
+    padding: 8px;
+    border: 1px solid rgba(190, 202, 242, 0.09);
+    border-radius: 12px;
+    background: rgba(8, 13, 27, 0.3);
+    animation: fade-in 150ms ease both;
+}
+
 .level-list {
     display: grid;
-    max-height: 260px;
+    max-height: 210px;
     grid-template-columns: repeat(10, minmax(0, 1fr));
     gap: 7px;
     overflow-y: auto;
@@ -935,6 +986,15 @@ h1 span {
     .level-tile {
         min-height: 43px;
         border-radius: 8px;
+    }
+
+    .level-picker-toggle {
+        min-height: 46px;
+        margin-bottom: 8px;
+    }
+
+    .level-picker-panel {
+        padding: 6px;
     }
 
     #difficulty {
