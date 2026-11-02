@@ -2,9 +2,9 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
     <meta name="theme-color" content="#0b1020">
-    <meta name="description" content="Play 500 progressive levels in this polished emoji memory matching game.">
+    <meta name="description" content="Match emoji pairs, beat your best score, and unlock 500 levels in Memory Match.">
     <title>AVR Tech Labs | Memory Match</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -12,7 +12,13 @@
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
+    <div id="combo-meter" class="combo-meter" aria-hidden="true">
+        <span class="combo-number" id="combo-count">2x</span>
+        <span class="combo-label" data-i18n="combo">Combo</span>
+    </div>
+
     <main class="game-shell">
+
         <header class="page-header">
             <a class="brand" href="#" aria-label="AVR Tech Labs">
                 <span class="brand-mark" aria-hidden="true"><span>AVR</span><i></i></span>
@@ -21,40 +27,95 @@
                     <span class="brand-tagline">IDEAS INTO REALITY</span>
                 </span>
             </a>
+            <div class="header-actions">
+            <button class="language-button" id="language-btn" type="button" aria-label="Switch language">తెలుగు</button>
             <button class="sound-button" id="sound-btn" type="button" aria-pressed="true" aria-label="Turn sound off">
                 <span id="sound-icon" aria-hidden="true">♫</span>
-                <span id="sound-label">Sound on</span>
+                <span id="sound-label" data-i18n="soundOn">Sound on</span>
             </button>
+            </div>
         </header>
 
-        <section class="game-card" aria-labelledby="game-title">
+        <section class="start-screen" id="start-screen" aria-labelledby="start-title">
+            <div class="start-hero">
+                <p class="eyebrow"><span class="eyebrow-dot"></span><span data-i18n="brainBreak">A LITTLE BRAIN BREAK</span></p>
+                <h1 id="start-title"><span data-i18n="welcomeReady">Ready to</span> <span data-i18n="welcomeMatch">match?</span></h1>
+                    <p class="subtitle" data-i18n="welcomeCopy">Train your memory, build your streak, and make every move count.</p>
+            </div>
+
+            <div class="daily-card">
+                <div class="daily-card-copy">
+                    <span class="daily-icon" aria-hidden="true">✦</span>
+                    <div>
+                        <p class="daily-kicker" data-i18n="dailyChallenge">DAILY CHALLENGE</p>
+                        <h2 data-i18n="dailyTitle">A new puzzle, every day</h2>
+                        <p id="daily-date-label"></p>
+                    </div>
+                </div>
+                <button class="primary-button" id="daily-start-btn" type="button"><span data-i18n="playDaily">Play today's challenge</span> <span aria-hidden="true">→</span></button>
+            </div>
+
+            <div class="home-stats" aria-label="Daily challenge statistics">
+                <div class="home-stat">
+                    <span class="home-stat-icon" aria-hidden="true">🔥</span>
+                    <span class="home-stat-label" data-i18n="currentStreak">Current streak</span>
+                    <strong id="daily-streak">0 days</strong>
+                </div>
+                <div class="home-stat">
+                    <span class="home-stat-icon" aria-hidden="true">🏆</span>
+                    <span class="home-stat-label" data-i18n="bestStreak">Best streak</span>
+                    <strong id="daily-best-streak">0 days</strong>
+                </div>
+                <div class="home-stat">
+                    <span class="home-stat-icon" aria-hidden="true">🎯</span>
+                    <span class="home-stat-label" data-i18n="nextLevel">Next level</span>
+                    <strong id="home-level">Level 1</strong>
+                </div>
+            </div>
+
+            <div class="mode-launchers">
+                <button class="launcher-card campaign-launcher" id="campaign-start-btn" type="button">
+                    <span class="launcher-icon" aria-hidden="true">✦</span>
+                    <span class="launcher-copy"><strong data-i18n="levelJourney">Level journey</strong><small data-i18n="journeyCopy">500 levels. One match at a time.</small></span>
+                    <span class="launcher-arrow" aria-hidden="true">→</span>
+                </button>
+                <button class="launcher-card freeplay-launcher" id="freeplay-start-btn" type="button">
+                    <span class="launcher-icon" aria-hidden="true">∞</span>
+                    <span class="launcher-copy"><strong data-i18n="freePlay">Free play</strong><small data-i18n="freeCopy">Choose a deck and play your way.</small></span>
+                    <span class="launcher-arrow" aria-hidden="true">→</span>
+                </button>
+            </div>
+        </section>
+
+        <section class="game-card" id="game-screen" aria-labelledby="game-title" hidden>
+            <button class="home-button" id="home-btn" type="button"><span aria-hidden="true">←</span> <span data-i18n="backHome">Back to home</span></button>
             <div class="game-heading">
                 <div>
-                    <p class="eyebrow"><span class="eyebrow-dot"></span> A LITTLE BRAIN BREAK</p>
-                    <h1 id="game-title">Memory <span>Match</span></h1>
-                    <p class="subtitle">Take on 500 levels, discover new emoji decks, or relax in free play.</p>
+                    <p class="eyebrow"><span class="eyebrow-dot"></span><span id="mode-eyebrow" data-i18n="brainBreak">A LITTLE BRAIN BREAK</span></p>
+                    <h1 id="game-title"><span data-i18n="memoryTitle">Memory</span> <span data-i18n="matchTitle">Match</span></h1>
+                    <p class="subtitle" id="game-subtitle" data-i18n="gameCopy">Match every pair, beat your best score, and unlock 500 levels — or relax in free play.</p>
                 </div>
                 <div class="heading-sparkle" aria-hidden="true">✳</div>
             </div>
 
-            <div class="game-modes" role="tablist" aria-label="Game mode">
+            <div class="game-modes" id="game-modes" role="tablist" aria-label="Game mode">
                 <button class="mode-tab active" id="journey-tab" type="button" role="tab" aria-selected="true" aria-controls="journey-panel">
-                    <span aria-hidden="true">✦</span> Level journey
+                    <span aria-hidden="true">✦</span> <span data-i18n="levelJourney">Level journey</span>
                 </button>
                 <button class="mode-tab" id="freeplay-tab" type="button" role="tab" aria-selected="false" aria-controls="freeplay-panel">
-                    <span aria-hidden="true">∞</span> Free play
+                    <span aria-hidden="true">∞</span> <span data-i18n="freePlay">Free play</span>
                 </button>
             </div>
 
             <section class="journey-panel" id="journey-panel" role="tabpanel" aria-labelledby="journey-tab">
                 <div class="levels-heading">
                     <div>
-                        <span class="control-label">YOUR ADVENTURE</span>
+                        <span class="control-label" data-i18n="yourAdventure">YOUR ADVENTURE</span>
                         <p id="level-description">Start small, then take on a bigger challenge.</p>
                     </div>
                     <span class="level-count" id="level-count">1 / 500</span>
                 </div>
-                <button class="level-picker-toggle" id="level-picker-toggle" type="button" aria-expanded="false" aria-controls="level-picker-panel">
+                <button class="level-picker-toggle" id="level-picker-toggle" type="button" aria-label="Choose a level" aria-expanded="false" aria-controls="level-picker-panel">
                     <span id="level-picker-label">Choose a level</span>
                     <span class="level-picker-chevron" aria-hidden="true">⌄</span>
                 </button>
@@ -65,43 +126,64 @@
 
             <div class="game-toolbar">
                 <div id="freeplay-panel" role="tabpanel" aria-labelledby="freeplay-tab" hidden>
-                    <label class="difficulty-control" for="difficulty">
-                        <span class="control-label">Difficulty</span>
-                        <select id="difficulty" aria-label="Choose difficulty">
-                            <option value="easy">Easy · 8 pairs</option>
-                            <option value="medium">Medium · 12 pairs</option>
-                            <option value="hard">Hard · 18 pairs</option>
-                        </select>
-                    </label>
+                    <div class="controls-row">
+                        <label class="difficulty-control" for="difficulty">
+                            <span class="control-label" data-i18n="difficulty">Difficulty</span>
+                            <select id="difficulty" aria-label="Choose difficulty">
+                                <option value="easy" data-i18n="easy">Easy · 8 pairs</option>
+                                <option value="medium" data-i18n="medium">Medium · 12 pairs</option>
+                                <option value="hard" data-i18n="hard">Hard · 18 pairs</option>
+                            </select>
+                        </label>
+                        <label class="difficulty-control" for="theme-select">
+                            <span class="control-label" data-i18n="theme">Theme</span>
+                            <select id="theme-select" aria-label="Choose theme">
+                                <option value="mixed" data-i18n="mixedEmojis">Mixed Emojis</option>
+                                <option value="animals" data-i18n="animals">Animals</option>
+                                <option value="food" data-i18n="food">Delicious Food</option>
+                                <option value="nature" data-i18n="nature">Nature & Weather</option>
+                                <option value="objects" data-i18n="objects">Random Objects</option>
+                            </select>
+                        </label>
+                    </div>
                 </div>
                 <div class="toolbar-actions">
-                    <button class="hint-button" id="hint-btn" type="button">
-                        <span aria-hidden="true">✧</span> Hint <span class="hint-count" id="hint-count">3</span>
-                    </button>
+                    <div class="powerups-group">
+                        <button class="hint-button" id="hint-btn" type="button" title="Reveal all cards">
+                            <span aria-hidden="true">✧</span> <span class="btn-text" data-i18n="hint">Hint</span> <span class="hint-count" id="hint-count">3</span>
+                        </button>
+                        <button class="powerup-button" id="freeze-btn" type="button" title="Freeze timer for 10s">
+                            <span aria-hidden="true">❄️</span> <span class="btn-text" data-i18n="freeze">Freeze</span> <span class="hint-count" id="freeze-count">1</span>
+                        </button>
+                    </div>
                     <button class="restart-button" id="restart-btn" type="button">
-                        <span aria-hidden="true">↻</span> New game
+                        <span aria-hidden="true">↻</span> <span data-i18n="newGame">New game</span>
                     </button>
                 </div>
             </div>
 
-            <div class="stats-grid" aria-label="Game statistics">
+            <div class="stats-grid" role="group" aria-label="Game statistics">
                 <div class="stat-card">
                     <span class="stat-icon moves-icon" aria-hidden="true">↗</span>
-                    <div><span class="stat-label">Moves</span><strong id="moves">0</strong></div>
+                    <div><span class="stat-label" data-i18n="moves">Moves</span><strong id="moves">0</strong></div>
+                </div>
+                <div class="stat-card">
+                    <span class="stat-icon score-icon" aria-hidden="true">★</span>
+                    <div><span class="stat-label" data-i18n="score">Score</span><strong id="score-display">0</strong></div>
                 </div>
                 <div class="stat-card">
                     <span class="stat-icon time-icon" aria-hidden="true">◷</span>
-                    <div><span class="stat-label">Time</span><strong id="timer">00:00</strong></div>
+                    <div><span class="stat-label" data-i18n="time">Time</span><strong id="timer">00:00</strong></div>
                 </div>
                 <div class="stat-card">
                     <span class="stat-icon best-icon" aria-hidden="true">♛</span>
-                    <div><span class="stat-label">Best</span><strong id="best-score">—</strong></div>
+                    <div><span class="stat-label" data-i18n="best">Best</span><strong id="best-score">—</strong></div>
                 </div>
             </div>
 
             <div class="progress-section">
                 <div class="progress-copy">
-                    <span id="progress-label">Pairs found</span>
+                    <span id="progress-label" data-i18n="pairsFound">Pairs found</span>
                     <span id="progress-text">0 / 8</span>
                 </div>
                 <div class="progress-track" id="progress-track" role="progressbar" aria-label="Pairs found" aria-valuemin="0" aria-valuemax="8" aria-valuenow="0">
@@ -109,12 +191,12 @@
                 </div>
             </div>
 
-            <div class="grid-container" id="grid-container" aria-label="Memory cards"></div>
-            <p class="game-message" id="game-message" aria-live="polite">Pick any card to get started.</p>
+            <div class="grid-container" id="grid-container" role="group" aria-label="Memory cards"></div>
+            <p class="game-message" id="game-message" aria-live="polite" data-i18n="pickCard">Pick any card to get started.</p>
         </section>
 
         <footer class="page-footer">
-            <span>Take your time. Trust your memory.</span>
+            <span data-i18n="footer">Take your time. Trust your memory.</span>
             <span class="footer-heart" aria-hidden="true">♥</span>
         </footer>
     </main>
@@ -123,14 +205,15 @@
         <section class="win-dialog" role="dialog" aria-modal="true" aria-labelledby="win-title" aria-describedby="win-summary">
             <div class="win-confetti" aria-hidden="true">✦</div>
             <div class="win-trophy" aria-hidden="true">🏆</div>
-            <p class="eyebrow">THAT WAS BRILLIANT</p>
-            <h2 id="win-title">You did it!</h2>
+            <p class="eyebrow" id="win-eyebrow" data-i18n="brilliant">THAT WAS BRILLIANT</p>
+            <h2 id="win-title" data-i18n="youDidIt">You did it!</h2>
             <p class="win-stars" id="win-stars" aria-label="Level rating"></p>
             <p class="win-summary" id="win-summary"></p>
             <div class="win-actions">
-                <button class="replay-button" id="play-again-btn" type="button">Replay level</button>
-                <button class="play-again-button" id="next-level-btn" type="button">Next level <span aria-hidden="true">→</span></button>
+                <button class="replay-button" id="play-again-btn" type="button" data-i18n="replayLevel">Replay level</button>
+                <button class="play-again-button" id="next-level-btn" type="button"><span data-i18n="nextLevelButton">Next level</span> <span aria-hidden="true">→</span></button>
             </div>
+            <div id="achievements-display" class="achievements-badge-container"></div>
         </section>
     </div>
 
